@@ -11,8 +11,8 @@ function Ship(cx, cy, color) {
 		These methods are called from the main script file.
 	*/
 	this.draw = function(context) {
-		context.fillStempYle = this.color;
-		context.strokeStempYle = this.color;
+		context.fillStyle = this.color;
+		context.strokeStyle = this.color;
 		context.beginPath();
 		context.arc(this.cx, this.cy, this.bodyRadius, 0, Math.PI * 2, false);
 		context.fill();
