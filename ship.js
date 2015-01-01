@@ -7,6 +7,13 @@ function Ship(cx, cy, color) {
 	this.hasWing1 = true;
 	this.hasWing2 = true;
 
+	this.movementMaxDistance = 100;
+	this.movementAccuracy = 1;
+
+	this.shootingMaxDistance = 100;
+	this.shootingAccuracy = .5;
+
+
 	/**
 		These methods are called from the main script file.
 	*/
@@ -52,6 +59,30 @@ function Ship(cx, cy, color) {
 			context.closePath();		
 			context.stroke();
 		}
+	}
+
+	// Params expected to be in world space
+	this.drawAimingCircle = function(context, worldX, worldY) {
+		// TODO: If the worldX and worldY are too far away from ship, show aiming circle at max distance at same angle from ship.
+		context.strokeStyle = "#000000";
+		context.lineWidth = 2;
+		context.beginPath();
+		context.moveTo(worldX - 5, worldY - 5);
+		context.lineTo(worldX + 5, worldY + 5);
+		context.moveTo(worldX - 5, worldY + 5);
+		context.lineTo(worldX + 5, worldY - 5);
+		context.closePath();
+		context.stroke();
+
+		// TODO: should probably use different scale so close shots are pretty certain, far ones get exponentially more random.
+		var aimingRadius = this.getDistance(worldX, worldY) / 2;
+
+		context.beginPath();
+		context.setLineDash([10]);
+		context.arc(worldX, worldY, aimingRadius, 2*Math.PI, false);
+		context.stroke();
+		context.setLineDash([]);
+		context.lineWidth = 1;
 	}
 
 	// Params expected to be in world space
@@ -101,5 +132,11 @@ function Ship(cx, cy, color) {
 		var objectY = -tempX * Math.sin(this.angle) + tempY * Math.cos(this.angle);
 		return [objectX, objectY];
 	}
+
+	// Params expected to be in world space
+ 	this.getDistance = function(worldX, worldY) {
+ 		var objectPoint = this.worldToObjectSpace(worldX, worldY);
+ 		return Math.sqrt(objectPoint[0] * objectPoint[0] + objectPoint[1] * objectPoint[1]);
+ 	}
 
 }
