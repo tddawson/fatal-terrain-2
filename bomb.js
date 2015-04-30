@@ -3,9 +3,11 @@ function bomb(x,y,explRadius,radius){
 	this.bombY=y;
 	this.radius = radius;
 	this.explRadius = explRadius;
+
 	this.isHit=function(x1,y2){
 		return false;
 	}
+	
 	this.draw=function(context){
 		context.beginPath();
 		context.setLineDash([5]);

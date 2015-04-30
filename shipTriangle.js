@@ -1,50 +1,66 @@
-function Ship(cx, cy, color) {
-	this.cx = cx;
-	this.cy = cy; 
+function ShipTriangle(tx,ty,color){
+	this.tx = tx;
+	this.ty = ty;
 	this.color = color;
-	this.bodySize = 10;
+	this.heightLength= 20;
+	this.sideLength=(2*this.heightLength)/Math.sqrt(3); 
+	this.wingY=((this.sideLength/4));
+	this.wingX=(this.sideLength/4);
 	this.angle = 0;
 	this.angleMove = 0;
 	this.length=90;
 	this.state = 0;
 
-	this.draw = function(context) {
+
+
+	this.draw = function(context){
 		context.fillStyle = this.color;
 		context.strokeStyle = this.color;
+
+
+//Body Triangle	
 		context.beginPath();
-		context.arc(this.cx, this.cy, this.bodySize, 0, Math.PI * 2, false);
+		var p = this.toWorldSpace(0,-(this.heightLength/2));
+		context.moveTo(p[0], p[1]);
+		p = this.toWorldSpace(this.sideLength/2,(this.heightLength/2)); 
+		context.lineTo(p[0], p[1]);
+		p = this.toWorldSpace(-this.sideLength/2,(this.heightLength/2))
+		context.lineTo(p[0], p[1]);
+		p = this.toWorldSpace(0,-(this.heightLength/2))
+		context.lineTo(p[0], p[1]);
+		context.closePath();
 		context.fill();
 
+// //Right Wing
 		context.beginPath();
-		var p = this.toWorldSpace(0, this.bodySize);
+		var p = this.toWorldSpace(this.wingX,0);
 		context.moveTo(p[0], p[1]);
-		p = this.toWorldSpace(0, 3 * this.bodySize);
+		p=this.toWorldSpace(this.sideLength,0);
 		context.lineTo(p[0], p[1]);
-		context.closePath();		
 		context.stroke();
 
 		context.beginPath();
-		p = this.toWorldSpace(-this.bodySize, 3 * this.bodySize);
+		var p = this.toWorldSpace(this.sideLength,this.heightLength/2)
 		context.moveTo(p[0], p[1]);
-		p = this.toWorldSpace(this.bodySize, 3 * this.bodySize);
+		p=this.toWorldSpace(this.sideLength,-this.heightLength/2);
 		context.lineTo(p[0], p[1]);
-		context.closePath();		
+		context.closePath();
+		context.stroke();
+
+// //Left Wing
+		context.beginPath();
+		var p = this.toWorldSpace(-this.wingX,0);
+		context.moveTo(p[0], p[1]);
+		p=this.toWorldSpace(-this.sideLength,0);
+		context.lineTo(p[0], p[1]);
 		context.stroke();
 
 		context.beginPath();
-		var p = this.toWorldSpace(0, -this.bodySize);
+		var p = this.toWorldSpace(-this.sideLength,this.heightLength/2)
 		context.moveTo(p[0], p[1]);
-		p = this.toWorldSpace(0, -3 * this.bodySize);
+		p=this.toWorldSpace(-this.sideLength,-this.heightLength/2);
 		context.lineTo(p[0], p[1]);
-		context.closePath();		
-		context.stroke();
-
-		context.beginPath();
-		var p = this.toWorldSpace(-this.bodySize, -3 * this.bodySize);
-		context.moveTo(p[0], p[1]);
-		p = this.toWorldSpace(this.bodySize, -3 * this.bodySize);
-		context.lineTo(p[0], p[1]);
-		context.closePath();		
+		context.closePath();
 		context.stroke();
 
 		if(this.state==1){
@@ -87,13 +103,22 @@ function Ship(cx, cy, color) {
 			
 		}
 
+
 	}
+
+
 
 	this.toWorldSpace = function(x, y) {
 		var wx = x * Math.cos(this.angle) - y * Math.sin(this.angle);
 		var wy = x * Math.sin(this.angle) + y * Math.cos(this.angle);
-		wx += this.cx;
-		wy += this.cy;
+		wx += this.tx;
+		wy += this.ty;
 		return [wx, wy];
 	}
+
+
+
+
+
+
 }
